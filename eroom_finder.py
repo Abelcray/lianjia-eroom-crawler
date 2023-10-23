@@ -44,7 +44,7 @@ def get_info_dic(info, area):
     hhid = re.findall('data-housecode="(.*?)"', str(info))[0]
     info_dic.update({
         'hhid': hhid,
-        'link': f'https://bj.lianjia.com/ershoufang/{hhid}.html',
+        'link': f'https://hz.lianjia.com/ershoufang/{hhid}.html',
     })
     icons = re.findall('class="houseIcon"></span>(.*?)</div>', str(info))[0].strip().split('|')
     info_dic.update({
@@ -62,10 +62,10 @@ def crawl_data(sess, real_dict):
     total_num = 0
     err_num = 0
     data_info_list = []
-    url = 'https://bj.lianjia.com/ershoufang/{}/pg{}/'
+    url = 'https://hz.lianjia.com/ershoufang/{}/pg{}/'
 
     for key_, value_ in real_dict.items():
-        start_url = 'https://bj.lianjia.com/ershoufang/{}/'.format(value_)
+        start_url = 'https://hz.lianjia.com/ershoufang/{}/'.format(value_)
         house_num = get_house_info(start_url, sess)
         print('{}: 二手房源共计「{}」套'.format(key_, house_num))
         time.sleep(2)
@@ -108,28 +108,33 @@ def main():
     args = parser.parse_args()
 
     # all beijing
-    area_dic = {'朝阳区': 'chaoyang',
-                '海淀区': 'haidian',
-                '西城区': 'xicheng',
-                '东城区': 'dongcheng',
-                '通州区': 'tongzhou',
-                '昌平区': 'changping',
-                '大兴区': 'daxing',
-                '丰台区': 'fengtai'
+    area_dic = {'西湖': 'xihu',
+                '钱塘区': 'qiantangqu',
+                '临平区': 'linpingqu',
+                '拱墅': 'gongshu',
+                '上城': 'shangcheng',
+                '滨江': 'binjiang',
+                '余杭': 'yuhang',
+                '萧山': 'xiaoshan',
+                '桐庐': 'tonglu',
+                '淳安':'chunan',
+                '建德':'jiande',
+                '富阳':'fuyang',
+                '临安':'linan'
     }
-    area_dic_small = {
-        '五道口': 'wudaokou',
-    }
+    # area_dic_small = {
+    #    '五道口': 'wudaokou',
+    #}
 
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36',
-        'Referer': 'https://bj.lianjia.com/ershoufang/'}
+        'Referer': 'https://hz.lianjia.com/ershoufang/'}
     sess = requests.session()
-    sess.get('https://bj.lianjia.com/ershoufang/', headers=headers)
+    sess.get('https://hz.lianjia.com/ershoufang/', headers=headers)
 
     real_dict = area_dic
-    if args.area_name == 'small':
-        real_dict = area_dic_small
+    #if args.area_name == 'small':
+    #    real_dict = area_dic_small
 
     data_info_list = crawl_data(sess, real_dict)
     data = pd.DataFrame(data_info_list)
